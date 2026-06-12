@@ -5,6 +5,8 @@ import DashboardLayout from "./pages/DashboardLayout";
 import DashboardPage from "./pages/DashboardPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ProjectDetailPage from "./pages/ProjectDetailPage";
+import SubmissionHistoryPage from "./pages/SubmissionHistoryPage";
+import SubmissionDetailPage from "./pages/SubmissionDetailPage";
 
 export default function App() {
   return (
@@ -25,6 +27,8 @@ export default function App() {
             <Route index element={<DashboardPage />} />
             <Route path="projects" element={<ProjectsPage />} />
             <Route path="projects/:projectId" element={<ProjectDetailPage />} />
+            <Route path="projects/:projectId/submissions" element={<SubmissionHistoryPage />} />
+            <Route path="projects/:projectId/submissions/:submissionId" element={<SubmissionDetailPage />} />
           </Route>
 
           {/* Catch-all */}

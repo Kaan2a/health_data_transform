@@ -16,6 +16,7 @@ class MappingRuleBase(BaseModel):
     transformation_type: str = Field("direct", description="Type of transformation to apply")
     transformation_config: dict[str, Any] | None = Field(None, description="Configuration for transformation")
     value_map: dict[str, str] | None = Field(None, description="Dictionary mapping source values to FHIR standard values")
+    masking_type: str = Field("NONE", description="Masking strategy (NONE, HASH, REDACT, PARTIAL)")
 
 
 class MappingRuleCreate(MappingRuleBase):

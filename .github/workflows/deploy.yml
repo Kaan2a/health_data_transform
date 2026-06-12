@@ -1,0 +1,56 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    uses: ./.github/workflows/backend-ci.yml
+    secrets: inherit
+
+  build-and-push:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -t fhir-backend:${{ github.sha }} ./backend
+
+      - name: Build frontend image
+        run: docker build -t fhir-frontend:${{ github.sha }} ./frontend
+
+      # Push to container registry (customize for your registry)
+      # - name: Push to registry
+      #   run: |
+      #     docker tag fhir-backend:${{ github.sha }} $REGISTRY/fhir-backend:${{ github.sha }}
+      #     docker push $REGISTRY/fhir-backend:${{ github.sha }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run database migration
+        run: echo "Run alembic upgrade head on production DB"
+        # Actual implementation depends on your hosting provider
+
+      - name: Deploy backend
+        run: echo "Deploy backend container"
+        # Cloud Run / Kubernetes / Docker Compose deployment
+
+      - name: Deploy frontend
+        run: echo "Deploy frontend container"
+
+      - name: Smoke test
+        run: |
+          echo "Running smoke tests..."
+          # curl -f https://your-api.com/health || exit 1

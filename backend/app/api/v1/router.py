@@ -10,6 +10,7 @@ from app.api.v1.mappings import router as mappings_router
 from app.api.v1.projects import router as projects_router
 from app.api.v1.jobs import router as jobs_router
 from app.api.v1.analytics import router as analytics_router
+from app.api.v1.submissions import router as submissions_router
 
 v1_router = APIRouter(prefix="/api/v1")
 
@@ -19,3 +20,4 @@ v1_router.include_router(data_sources_router)
 v1_router.include_router(mappings_router)
 v1_router.include_router(jobs_router)
 v1_router.include_router(analytics_router)
+v1_router.include_router(submissions_router)

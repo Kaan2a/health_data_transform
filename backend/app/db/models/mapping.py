@@ -55,6 +55,10 @@ class MappingRule(Base):
         JSON, nullable=True
     )
 
+    masking_type: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="NONE"
+    )
+
     # ── Relationships ──
     project: Mapped[Project] = relationship()
     organization: Mapped[Organization] = relationship()

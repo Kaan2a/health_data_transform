@@ -70,6 +70,13 @@ async def create_data_source(
     repo = Repository(db)
     await _get_project_or_404(project_id, user.organization_id, repo)
 
+    if body.type == DataSourceType.API and body.api_url:
+        from app.security.ssrf import validate_url_for_ssrf, SSRFError
+        try:
+            validate_url_for_ssrf(body.api_url)
+        except SSRFError as e:
+            raise ValidationError(str(e))
+
     source = DataSource(
         project_id=project_id,
         organization_id=user.organization_id,

@@ -66,7 +66,7 @@ class TestCreateDataSource:
             json={
                 "name": "REST API Source",
                 "type": "api",
-                "api_url": "https://api.example.com/patients",
+                "api_url": "http://mock-api:5000/patients",
                 "api_method": "GET",
             },
             headers=auth_headers,
@@ -74,7 +74,7 @@ class TestCreateDataSource:
         assert response.status_code == 201
         data = response.json()["data"]
         assert data["type"] == "api"
-        assert data["api_url"] == "https://api.example.com/patients"
+        assert data["api_url"] == "http://mock-api:5000/patients"
 
     async def test_create_source_invalid_project(
         self,

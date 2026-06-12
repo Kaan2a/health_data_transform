@@ -14,7 +14,7 @@ interface MappingTableProps {
 
 export default function MappingTable({ projectId, sourceId, columns }: MappingTableProps) {
   const [schema, setSchema] = useState<FhirSchemaField[]>([]);
-  const [mappingState, setMappingState] = useState<Record<string, { target: string; valueMapStr: string }>>({});
+  const [mappingState, setMappingState] = useState<Record<string, { target: string; valueMapStr: string; maskingType: any }>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -29,11 +29,12 @@ export default function MappingTable({ projectId, sourceId, columns }: MappingTa
         setSchema(schemaResp.data);
 
         // Initialize state with existing rules
-        const initialState: Record<string, { target: string; valueMapStr: string }> = {};
+        const initialState: Record<string, { target: string; valueMapStr: string; maskingType: any }> = {};
         rulesResp.data.forEach((rule: any) => {
           initialState[rule.sourceField || rule.source_field] = {
             target: rule.targetFhirField || rule.target_fhir_field,
             valueMapStr: (rule.valueMap || rule.value_map) ? JSON.stringify(rule.valueMap || rule.value_map) : "",
+            maskingType: (rule.maskingType || rule.masking_type) || "NONE",
           };
         });
         setMappingState(initialState);
@@ -57,6 +58,7 @@ export default function MappingTable({ projectId, sourceId, columns }: MappingTa
         newState[s.source_field] = {
           target: s.target_fhir_field,
           valueMapStr: "",
+          maskingType: "NONE",
         };
       });
       setMappingState(newState);
@@ -84,6 +86,7 @@ export default function MappingTable({ projectId, sourceId, columns }: MappingTa
             target_fhir_field: mapping.target,
             transformation_type: "direct",
             value_map,
+            masking_type: mapping.maskingType || "NONE",
           };
         });
 
@@ -127,6 +130,7 @@ export default function MappingTable({ projectId, sourceId, columns }: MappingTa
               <th className="px-4 py-3 font-medium">Veri Tipi</th>
               <th className="px-4 py-3 font-medium">Hedef Alan (FHIR)</th>
               <th className="px-4 py-3 font-medium">Sözlük (JSON)</th>
+              <th className="px-4 py-3 font-medium">Maskeleme</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -147,7 +151,7 @@ export default function MappingTable({ projectId, sourceId, columns }: MappingTa
                     onChange={(e) =>
                       setMappingState({ 
                         ...mappingState, 
-                        [col.name]: { ...(mappingState[col.name] || { valueMapStr: "" }), target: e.target.value } 
+                        [col.name]: { ...(mappingState[col.name] || { valueMapStr: "", maskingType: "NONE" }), target: e.target.value } 
                       })
                     }
                   >
@@ -169,12 +173,32 @@ export default function MappingTable({ projectId, sourceId, columns }: MappingTa
                       setMappingState({
                         ...mappingState,
                         [col.name]: {
-                           ...(mappingState[col.name] || { target: "" }),
+                           ...(mappingState[col.name] || { target: "", maskingType: "NONE" }),
                            valueMapStr: e.target.value
                         }
                       })
                     }
                   />
+                </td>
+                <td className="px-4 py-3">
+                  <select
+                    className="w-full max-w-[120px] px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    value={mappingState[col.name]?.maskingType || "NONE"}
+                    onChange={(e) =>
+                      setMappingState({
+                        ...mappingState,
+                        [col.name]: {
+                           ...(mappingState[col.name] || { target: "", valueMapStr: "" }),
+                           maskingType: e.target.value as any
+                        }
+                      })
+                    }
+                  >
+                    <option value="NONE">Yok</option>
+                    <option value="HASH">Hash</option>
+                    <option value="PARTIAL">Kısmi</option>
+                    <option value="REDACT">Gizle</option>
+                  </select>
                 </td>
               </tr>
             ))}

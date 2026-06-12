@@ -51,7 +51,9 @@ docker-compose.override.yml
 uploads/
 artifacts/
 *.bundle.json
-*.db
-*.sqlite
-*.sqlite3
+.agents/
+skills-lock.json
+backend/storage/
+backend/test.db
 user_msgs.txt
+

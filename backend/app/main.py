@@ -31,6 +31,10 @@ logger = get_logger(__name__)
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Application lifespan — runs on startup and shutdown."""
     setup_logging()
+    
+    from app.core.environment import check_production_readiness
+    check_production_readiness(settings)
+    
     logger.info("FHIR Transformer başlatılıyor…")
     yield
     logger.info("FHIR Transformer kapatılıyor…")
@@ -51,6 +55,14 @@ def create_app() -> FastAPI:
         redoc_url="/redoc" if settings.DEBUG else None,
     )
 
+    # ── Rate Limiter ──
+    from slowapi import Limiter, _rate_limit_exceeded_handler
+    from slowapi.util import get_remote_address
+    from slowapi.errors import RateLimitExceeded
+    
+    limiter = Limiter(key_func=get_remote_address, default_limits=[settings.RATE_LIMIT_DEFAULT])
+    app.state.limiter = limiter
+
     # ── Middleware (order matters: first added = outermost) ──
     app.add_middleware(RequestIdMiddleware)
     app.add_middleware(
@@ -61,6 +73,8 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
         expose_headers=["X-Request-ID"],
     )
+
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
     # ── Exception handlers ──
     @app.exception_handler(AppError)

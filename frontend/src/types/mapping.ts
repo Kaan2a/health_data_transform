@@ -1,4 +1,5 @@
 export type TransformationType = "direct" | "date_format" | "concat" | "lookup" | "custom_script";
+export type MaskingType = "NONE" | "HASH" | "REDACT" | "PARTIAL";
 
 export interface TransformationConfig {
   format?: string; // For date_format
@@ -18,6 +19,7 @@ export interface MappingRule {
   transformationType: TransformationType;
   transformationConfig?: TransformationConfig | null;
   valueMap?: Record<string, string> | null;
+  maskingType: MaskingType;
   createdAt: string;
   updatedAt: string;
 }
@@ -28,6 +30,7 @@ export interface MappingRuleCreate {
   transformation_type: TransformationType;
   transformation_config?: TransformationConfig | null;
   value_map?: Record<string, string> | null;
+  masking_type?: MaskingType;
 }
 
 export interface FhirSchemaField {

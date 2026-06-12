@@ -93,7 +93,15 @@ def build_fhir_resource(resource_type: str, row: dict[str, Any], rules: list[Map
             # Will raise ValueError if transformation fails
             transformed_val = apply_transformation(val, rule)
             if transformed_val is not None:
-                set_nested_value(resource, rule.target_fhir_field, transformed_val)
+                # Apply data masking if configured
+                from app.security.masking import apply_mask, MaskingType
+                try:
+                    m_type = MaskingType(rule.masking_type)
+                except ValueError:
+                    m_type = MaskingType.NONE
+                masked_val = apply_mask(transformed_val, m_type)
+                
+                set_nested_value(resource, rule.target_fhir_field, masked_val)
 
     # Validate using fhir.resources
     try:
