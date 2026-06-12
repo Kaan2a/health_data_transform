@@ -1,0 +1,11 @@
+patient_id,first_name,last_name,birth_date,gender,email,weight_kg,is_active
+P001,Ahmet,Yılmaz,1985-03-15,male,ahmet@example.com,75.5,true
+P002,Fatma,Kaya,1990-07-22,female,fatma@example.com,62.3,true
+P003,Mehmet,Demir,1978-11-30,male,mehmet@example.com,88.1,false
+P004,Ayşe,Çelik,1995-01-08,female,ayse@example.com,55.0,true
+P005,Ali,Öztürk,1982-06-12,male,ali@example.com,70.2,true
+P006,Zeynep,Aydın,2000-09-25,female,zeynep@example.com,58.7,true
+P007,Mustafa,Şahin,1973-04-18,male,mustafa@example.com,92.4,false
+P008,Elif,Arslan,1988-12-03,female,elif@example.com,64.0,true
+P009,Hasan,Doğan,1965-08-14,male,hasan@example.com,81.9,true
+P010,Selin,Koç,1998-02-28,female,selin@example.com,52.6,true

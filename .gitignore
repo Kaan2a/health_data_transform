@@ -1,0 +1,57 @@
+# ───── Python ─────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.whl
+.venv/
+venv/
+env/
+
+# ───── Testing ─────
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ───── Node ─────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ───── Vite ─────
+frontend/dist/
+
+# ───── IDE ─────
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ───── Environment ─────
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ───── Docker ─────
+docker-compose.override.yml
+
+# ───── Project Specific ─────
+uploads/
+artifacts/
+*.bundle.json
+*.db
+*.sqlite
+*.sqlite3
+user_msgs.txt

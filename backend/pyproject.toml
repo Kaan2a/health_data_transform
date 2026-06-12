@@ -1,0 +1,70 @@
+[project]
+name = "fhir-transformer-backend"
+version = "0.1.0"
+description = "CSV/API → FHIR R4 Transformer Backend"
+requires-python = ">=3.12"
+dependencies = [
+    # Web framework
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "python-multipart>=0.0.18",
+    # Database
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30.0",
+    "alembic>=1.14.0",
+    "aiosqlite>=0.20.0",
+    # Auth
+    "python-jose[cryptography]>=3.3.0",
+    "bcrypt>=4.0.0",
+    # HTTP client
+    "httpx>=0.28.0",
+    # Validation & serialization
+    "pydantic[email]>=2.10.0",
+    "pydantic-settings>=2.7.0",
+    "fhir.resources>=7.1.0",
+    # Utilities
+    "python-dotenv>=1.0.1",
+    # File I/O
+    "aiofiles>=24.0.0",
+    # Encoding detection
+    "charset-normalizer>=3.4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.25.0",
+    "httpx>=0.28.0",
+    "mypy>=1.13.0",
+    "ruff>=0.8.0",
+    "aiosqlite>=0.20.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "S", "B", "A", "C4", "SIM"]
+ignore = ["S101", "S106"]  # Allow assert in tests, hardcoded passwords in config
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[build-system]
+requires = ["setuptools>=75.0", "wheel"]
+build-backend = "setuptools.build_meta"
